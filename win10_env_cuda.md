@@ -1,5 +1,60 @@
 # Windows 10 + RTX 4070 SUPER 딥러닝 환경설정 가이드
 
+## Python 버전 및 Conda 환경 설정 가이드
+
+RTX 4070 SUPER + CUDA 12.2 + cuDNN 8.9 + TensorRT 10.13.2.6 환경에서 최적의 호환성을 위한 Python 버전 및 설치 가이드입니다.
+
+### 권장 Python 버전
+- **Python 3.9-3.10**: 모든 라이브러리와 호환성이 가장 좋음
+  - PyTorch: Python 3.8-3.11 지원
+  - TensorFlow: Python 3.8-3.10 지원
+  - Hugging Face: Python 3.8-3.10 권장
+
+### Conda 환경 설정 명령어
+
+```bash
+# 딥러닝 가상환경 생성 (Python 3.10 권장)
+conda create -n deeplearning python=3.10
+
+# 환경 활성화
+conda activate deeplearning
+
+# PyTorch 설치 (CUDA 12.2 지원)
+conda install pytorch torchvision torchaudio pytorch-cuda=12.1 -c pytorch -c nvidia
+# 또는
+pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu122
+
+# TensorFlow 설치
+pip install tensorflow
+
+# Hugging Face Transformers 설치 (기본 의존성 포함)
+pip install transformers
+
+# 추가 Hugging Face 라이브러리 설치
+pip install datasets accelerate evaluate optimum
+```
+
+### 설치 확인 명령어
+
+```bash
+# CUDA와 GPU 사용 가능 여부 확인
+python -c "import torch; print('PyTorch 버전:', torch.__version__); print('CUDA 사용 가능:', torch.cuda.is_available()); print('사용 가능한 GPU:', torch.cuda.get_device_name(0))"
+
+python -c "import tensorflow as tf; print('TensorFlow 버전:', tf.__version__); print('GPU 사용 가능:', tf.config.list_physical_devices('GPU'))"
+
+python -c "from transformers import AutoModel; print('Transformers 설치 확인 성공')"
+```
+
+### 주요 라이브러리 버전 호환성
+
+| 라이브러리 | 권장 버전 | CUDA 12.2 호환성 |
+|:----------|:---------|:--------------|
+| PyTorch   | 2.2.x 이상 | 네이티브 지원 (cu122) |
+| TensorFlow | 2.15.x 이상 | 자동 호환 지원 |
+| Transformers | 4.36.x 이상 | PyTorch/TensorFlow 의존 |
+| Python | 3.10 | 최적의 호환성 |
+
+
 ## 설치 순서 및 공식 다운로드 경로
 
 | 순서 | 항목        | 공식사이트/경로                                  | 설치/설정 방법 요약                                         | 환경변수/경로 설정 주의사항                          |
